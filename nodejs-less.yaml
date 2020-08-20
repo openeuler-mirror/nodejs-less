@@ -1,0 +1,4 @@
+version_control: github
+src_repo: less/less.js
+tag_pattern: "^v"
+seperator: "."

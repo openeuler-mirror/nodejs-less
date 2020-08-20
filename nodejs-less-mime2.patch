@@ -1,0 +1,70 @@
+commit 1cbb465aa92f7cb903f7900e0e43cc08294fc649
+Author: Tom Hughes <tom@compton.nu>
+Date:   Thu Sep 20 18:55:15 2018 +0100
+
+    Update for npm(mime) version 2.x
+
+diff --git a/bin/lessc b/bin/lessc
+index 0ffe6dbc..11c11d45 100644
+--- a/bin/lessc
++++ b/bin/lessc
+@@ -180,10 +180,10 @@ var environment = {
+     return buffer.toString('base64');
+   },
+   mimeLookup: function mimeLookup(filename) {
+-    return require('mime').lookup(filename);
++    return require('mime').getType(filename);
+   },
+   charsetLookup: function charsetLookup(mime) {
+-    return require('mime').charsets.lookup(mime);
++    return (/^text\/|^application\/(javascript|json)/).test(mime) ? 'UTF-8' : null;
+   },
+   getSourceMapGenerator: function getSourceMapGenerator() {
+     return require('source-map').SourceMapGenerator;
+diff --git a/dist/less.cjs.js b/dist/less.cjs.js
+index 41b01742..cfc307e9 100644
+--- a/dist/less.cjs.js
++++ b/dist/less.cjs.js
+@@ -11,10 +11,10 @@ var environment = {
+     return buffer.toString('base64');
+   },
+   mimeLookup: function mimeLookup(filename) {
+-    return require('mime').lookup(filename);
++    return require('mime').getType(filename);
+   },
+   charsetLookup: function charsetLookup(mime) {
+-    return require('mime').charsets.lookup(mime);
++    return (/^text\/|^application\/(javascript|json)/).test(mime) ? 'UTF-8' : null;
+   },
+   getSourceMapGenerator: function getSourceMapGenerator() {
+     return require('source-map').SourceMapGenerator;
+diff --git a/lib/less-node/environment.js b/lib/less-node/environment.js
+index a9b790c9..a24cf481 100644
+--- a/lib/less-node/environment.js
++++ b/lib/less-node/environment.js
+@@ -5,10 +5,10 @@ export default {
+         return buffer.toString('base64');
+     },
+     mimeLookup: function (filename) {
+-        return require('mime').lookup(filename);
++        return require('mime').getType(filename);
+     },
+     charsetLookup: function (mime) {
+-        return require('mime').charsets.lookup(mime);
++        return (/^text\/|^application\/(javascript|json)/).test(mime) ? 'UTF-8' : null;
+     },
+     getSourceMapGenerator: function getSourceMapGenerator() {
+         return require('source-map').SourceMapGenerator;
+diff --git a/package.json b/package.json
+index b9887fcf..50599f21 100644
+--- a/package.json
++++ b/package.json
+@@ -42,7 +42,7 @@
+     "errno": "^0.1.1",
+     "graceful-fs": "^4.1.2",
+     "image-size": "~0.5.0",
+-    "mime": "^1.4.1",
++    "mime": "^2.0.0",
+     "mkdirp": "^0.5.0",
+     "promise": "^7.1.1",
+     "request": "^2.83.0",
