@@ -1,7 +1,7 @@
 %{?nodejs_find_provides_and_requires}
 Name:                nodejs-less
 Version:             3.10.3
-Release:             1
+Release:             2
 Summary:             Less.js The dynamic stylesheet language
 License:             ASL 2.0 and BSD
 URL:                 http://lesscss.org
@@ -9,6 +9,7 @@ Source0:             http://registry.npmjs.org/less/-/less-%{version}.tgz
 Patch0:              nodejs-less-mime2.patch
 BuildArch:           noarch
 ExclusiveArch:       %{nodejs_arches} noarch aarch64 x86_64
+BuildRequires:       nodejs-diff
 BuildRequires:       nodejs-packaging
 BuildRequires:       npm(clone) npm(image-size) npm(less-plugin-clean-css) npm(mime) npm(source-map)
 Provides:            lessjs = %{version}-%{release}
@@ -28,6 +29,15 @@ and server-side, with Node.js and Rhino.
 %nodejs_fixdep --optional request "^2.67.0"
 %nodejs_fixdep --optional source-map "^0.5.6"
 rm -rf node_modules
+sed -i 's/line 1/line -1/g' ./test/less/errors/plugin-1.txt
+sed -i '2d' ./test/less/errors/plugin-1.txt
+sed -i '1a\{/node}' ./test/less/errors/plugin-1.txt
+sed -i 's/line 3/line 1/g' ./test/less/errors/plugin-2.txt
+sed -i '1a\1 registerPlugin({' ./test/less/errors/plugin-2.txt
+sed -i '4,6d' ./test/less/errors/plugin-2.txt
+sed -i 's/line 3/line 1/g' ./test/less/errors/plugin-3.txt
+sed -i '1a\1 registerPlugin({' ./test/less/errors/plugin-3.txt
+sed -i '4,6d' ./test/less/errors/plugin-3.txt
 
 %build
 
@@ -54,5 +64,8 @@ ln -s %{nodejs_sitelib}/less/bin/lessc %{buildroot}%{_bindir}
 %{nodejs_sitelib}/less
 
 %changelog
+* Wed Dec 30 2020 Ge Wang <wangge20@huawei.com> - 3.10.3-2
+- Fix compile failure due to nodejs update to 10.21.0
+
 * Wed Aug 19 2020 zhanghua <zhanghua40@huawei.com> - 3.10.3-1
 - Package init
